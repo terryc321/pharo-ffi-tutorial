@@ -8,7 +8,9 @@ Class {
 { #category : 'as yet unclassified' }
 FFITutorial >> ticksSinceStart [ 
 "call c clock procedure"
-^ self ffiCall: #( uint clock() ) library: 'libc.so.6'
+"^ self ffiCall: #( uint clock() ) library: 'libc.so.6'"
+^ self ffiCall: #( uint clock() ) library: MyLibC
+
 
 
 
