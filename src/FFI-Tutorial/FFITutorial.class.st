@@ -37,6 +37,28 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
+FFITutorial >> ffiLibrary [
+"over-riding a default method in FFILibrary class ? inside FFITutorial class ?? ... "
+^ MyLibC 
+	
+	
+
+
+	
+]
+
+{ #category : 'as yet unclassified' }
+FFITutorial >> myLibrary [
+"over-riding a default method in FFILibrary class ? inside FFITutorial class ?? ... "
+^ MyLibC 
+	
+	
+
+
+	
+]
+
+{ #category : 'as yet unclassified' }
 FFITutorial >> ticksSinceStart [
 "call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
 "MyLibC defined in class MyLibC package Unified-FFI-Libraries , no idea why"
@@ -44,7 +66,8 @@ FFITutorial >> ticksSinceStart [
 "on unix64 bit - MyLibC unix64LibraryName "
 "on mac  - MyLibC calls macLibraryName "
 "on win32 bit - MyLibC calls win32LibraryName ? or should it be win64 ? "
-	^ self ffiCall: #( ulong clock (  ) ) library: MyLibC
+	^ self ffiCall: #( ulong clock (  ) ) library: self myLibrary
+	
 	
 
 ]
@@ -83,7 +106,9 @@ FFITutorial >> ticksSinceStartWindows [
 FFITutorial >> time [
 "call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
 	"^ self ffiCall: #( uint time ( NULL ) ) library: MyLibC"
-	^ self ffiCall: #( ulong time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libc.so'
+ "	^ self ffiCall: #( ulong time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libc.so'"
+	^ self ffiCall: #( ulong time ( NULL ) ) library: self myLibrary .
+	
 
 
 	
@@ -93,6 +118,7 @@ FFITutorial >> time [
 FFITutorial >> time2 [
 "call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
 	"^ self ffiCall: #( uint time ( NULL ) ) library: MyLibC"
+	 "strangely if cairo library installed it also has time defined there also "
 	^ self ffiCall: #( uint time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libcairo.so'.
 	
 	
