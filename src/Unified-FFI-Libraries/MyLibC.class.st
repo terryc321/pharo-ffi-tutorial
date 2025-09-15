@@ -11,7 +11,7 @@ MyLibC >> macLibraryName [
 ]
 
 { #category : 'as yet unclassified' }
-MyLibC >> unixBlahBlahLibraryName [
+MyLibC >> unixLibraryName [
 ^ 'libc.so.6'
 ]
 
