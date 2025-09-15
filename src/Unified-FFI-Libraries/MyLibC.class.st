@@ -15,8 +15,8 @@ MyLibC >> unix64LibraryName [
 "On different flavors of Linux, the path to the library may
 differ, depending on the distro and whether the system is 32- or
 64-bit."
-self error: 'you dummy.'.
-#('/usr/lib/i386-linux-gnu/libcairo.so.2'
+#('/usr/lib/x86_64-linux-gnu/libcairo.so'
+'''/usr/lib/i386-linux-gnu/libcairo.so.2'
 '/usr/lib32/libcairo.so.2'
 '/usr/lib/libcairo.so.2' ) do: [ :path |
 path asFileReference exists ifTrue: [ ^ path ] ].
