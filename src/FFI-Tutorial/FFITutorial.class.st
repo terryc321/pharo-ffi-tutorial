@@ -1,3 +1,21 @@
+"
+```
+FFITutorial new ticksSinceStart. #( ""63033001"")
+```
+
+
+Changelog
+Created Package FFI-Tutorial class FFITutorial
+Created Package Unified-FFI-Libraries class MyLibC
+any hypen(s) in class name may confuse smalltalk
+
+
+
+1 - inserted new FFITutorial new ticksSinceStart.
+2 - changed 
+
+
+"
 Class {
 	#name : 'FFITutorial',
 	#superclass : 'Object',
@@ -6,15 +24,9 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-FFITutorial >> ticksSinceStart [ 
-"call c clock procedure"
-"^ self ffiCall: #( uint clock() ) library: 'libc.so.6'"
-^ self ffiCall: #( uint clock() ) library: MyLibC
+FFITutorial >> ticksSinceStart [
 
-
-
-
-
+	^ self ffiCall: #( #uint #clock #(  ) ) library: MyLibC
 ]
 
 { #category : 'as yet unclassified' }
