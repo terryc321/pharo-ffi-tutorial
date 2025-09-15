@@ -1,8 +1,14 @@
 "
 ```
-FFITutorial new ticksSinceStart. #( ""63033001"")
+FFITutorial ticksSinceStart.
+FFITutorial new ticksSinceStart.
 ```
 
+```
+^ self ffiCall: #( int time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libcairo.so'	
+^ self ffiCall: #( ulong time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libcairo.so'	
+
+```
 
 Changelog
 Created Package FFI-Tutorial class FFITutorial
@@ -38,8 +44,9 @@ FFITutorial >> ticksSinceStart [
 "on unix64 bit - MyLibC unix64LibraryName "
 "on mac  - MyLibC calls macLibraryName "
 "on win32 bit - MyLibC calls win32LibraryName ? or should it be win64 ? "
-	^ self ffiCall: #( uint clock (  ) ) library: MyLibC
+	^ self ffiCall: #( ulong clock (  ) ) library: MyLibC
 	
+
 ]
 
 { #category : 'as yet unclassified' }
@@ -76,8 +83,7 @@ FFITutorial >> ticksSinceStartWindows [
 FFITutorial >> time [
 "call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
 	"^ self ffiCall: #( uint time ( NULL ) ) library: MyLibC"
-	^ self ffiCall: #( uint time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libcairo.so'
-	
+	^ self ffiCall: #( ulong time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libc.so'
 
 
 	
@@ -87,7 +93,7 @@ FFITutorial >> time [
 FFITutorial >> time2 [
 "call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
 	"^ self ffiCall: #( uint time ( NULL ) ) library: MyLibC"
-	^ self ffiCall: #( uint time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libc.so'.
+	^ self ffiCall: #( uint time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libcairo.so'.
 	
 	
 
