@@ -26,7 +26,7 @@ Class {
 { #category : 'as yet unclassified' }
 FFITutorial >> ticksSinceStart [
 "call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
-	^ self ffiCall: #( #uint #clock #(  ) ) library: MyLibC
+	^ self ffiCall: #( uint clock (  ) ) library: MyLibC
 	
 ]
 
@@ -58,4 +58,13 @@ FFITutorial >> ticksSinceStartWindows [
 
 
 
+]
+
+{ #category : 'as yet unclassified' }
+FFITutorial >> time [
+"call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
+	^ self ffiCall: #( uint time ( NULL ) ) library: MyLibC
+
+
+	
 ]
