@@ -1,9 +1,31 @@
 "
-FFITutorial >>  ticksSinceStart
+```
+we put a shared variable called MagicNumber into FFITutorial instance side
+even though MagicNumber is shared between classes
+not a variable in an instance side ... huh ... 
+
+Object class << FFITutorial class
+	slots: {}
+	
+Object << #FFITutorial
+	slots: {};
+	sharedVariables: { #MagicNumber };
+	package: 'FFI-Tutorial'
+		
+
+FFITutorial class >>  ticksSinceStart
 	^ self ffiCall: #( ulong clock (  ) ) library: 'libc.so'
 	
-FFITutorial >> time
+FFITutorial class >> time
 	^ self ffiCall: #( ulong time (  ) ) library: 'libc.so'
+
+FFITutorial class >> abs: n
+	^ self ffiCall: #( int abs ( int n ) ) .
+
+FFITutorial class >> initialize
+ MagicNumber := -42	
+	
+``
 
 book tries to generalise away difficulty finding 'libc.so' by replacing with MyLibC 
 also mentions cairo so we made another one for that too
@@ -21,11 +43,9 @@ MyLibC >> unix64LibraryName
 MyLibC >> win32LibraryName
 
 
-
-
 ```
-FFITutorial ticksSinceStart.
-FFITutorial new ticksSinceStart.
+FFITutorial class ticksSinceStart.
+
 ```
 
 ```
@@ -50,9 +70,34 @@ f ticksSinceStart.
 { f time . f time2  }. 
 ```
 
+""
 See Classses defined in Unified-FFI-Libraries package with this XXX
 defined two new classes MyLibC and MyLibCairo that 
 
+
+note about using shared pools - google book  { pharo by example 8.0 }
+
+
+SharedPool subclass: #FFITutorialPool
+...
+classVariableNames: 'MagicNumber'
+...
+FFITutorialPool class >> initialize [
+""Set this to -42 because.. Life, the Universe, and Everything.""
+MagicNumber := -42.
+]
+Object subclass: #FFITutorial
+...
+poolDictionaries: 'FFITutorialPool'
+...
+FFITutorial class >> absMinusFortyTwo [
+^ self ffiCall: #( int abs ( int MagicNumber ) )
+]
+Using a shared pool does not change the normal Pharo usage of uFFI. If you
+want to learn more about Pharo shared pools, we recommend you take a look
+at Pharo by Example 8.0.
+
+""
 
 
 
@@ -61,16 +106,20 @@ defined two new classes MyLibC and MyLibCairo that
 Class {
 	#name : 'FFITutorial',
 	#superclass : 'Object',
+	#classVars : [
+		'MagicNumber'
+	],
 	#category : 'FFI-Tutorial',
 	#package : 'FFI-Tutorial'
 }
 
 { #category : 'as yet unclassified' }
-FFITutorial >> ffiLibrary [
-"over-riding a default method in FFILibrary class ? inside FFITutorial class ?? ... "
-"^ self error: ('you tried running default FFI Library version not implemented yet')"
-"over-riding default method ffiCall: "
-^ MyLibC 	
+FFITutorial class >> abs: n [
+"call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
+	"^ self ffiCall: #( uint time ( NULL ) ) library: MyLibC"
+ "	^ self ffiCall: #( ulong time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libc.so'"
+	" ^ self ffiCall: #( ulong time ( NULL ) ) library: self myLibrary ."
+	^ self ffiCall: #( int abs ( int n ) ) .
 	
 
 
@@ -78,18 +127,41 @@ FFITutorial >> ffiLibrary [
 ]
 
 { #category : 'as yet unclassified' }
-FFITutorial >> myLibrary [
-"over-riding a default method in FFILibrary class ? inside FFITutorial class ?? ... "
-^ MyLibC 
-	
-	
+FFITutorial class >> absMinusFortyTwo [
+
+^ self ffiCall: #( int abs ( int MagicNumber) )
+"the meaning of life and everything"
 
 
 	
 ]
 
 { #category : 'as yet unclassified' }
-FFITutorial >> ticksSinceStart [
+FFITutorial class >> ffiLibrary [
+ ^ MyLibC . 
+
+
+	
+]
+
+{ #category : 'as yet unclassified' }
+FFITutorial class >> initialize [ 
+"the meaning of life and everything"
+ MagicNumber := -42 . 
+
+
+	
+]
+
+{ #category : 'as yet unclassified' }
+FFITutorial class >> minusFortyTwo [
+^ MagicNumber
+
+	
+]
+
+{ #category : 'as yet unclassified' }
+FFITutorial class >> ticksSinceStart [
 "call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
 "MyLibC defined in class MyLibC package Unified-FFI-Libraries , no idea why"
 "on unix32 bit - MyLibC unixLibraryName "
@@ -103,37 +175,37 @@ FFITutorial >> ticksSinceStart [
 ]
 
 { #category : 'as yet unclassified' }
-FFITutorial >> ticksSinceStartLinux [ 
-"call c clock procedure"
-^ self ffiCall: #( uint clock() ) library: 'libc.so.6'
+FFITutorial class >> ticksSinceStartLinux [
+	"call c clock procedure"
 
+	| aFFITutorial |
+	aFFITutorial := self new.
 
-
-
+	^ aFFITutorial ffiCall: #( uint clock #(  ) ) library: 'libc.so.6'
 ]
 
 { #category : 'as yet unclassified' }
-FFITutorial >> ticksSinceStartMac [ 
-"call c clock procedure"
-^ self ffiCall: #( uint clock() ) library: 'libc.dylib'
+FFITutorial class >> ticksSinceStartMac [
+	"call c clock procedure"
 
+	| aFFITutorial |
+	aFFITutorial := self new.
 
-
-
+	^ aFFITutorial ffiCall: #( uint clock #(  ) ) library: 'libc.dylib'
 ]
 
 { #category : 'as yet unclassified' }
-FFITutorial >> ticksSinceStartWindows [ 
-"call c clock procedure"
-^ self ffiCall: #( uint clock() ) library: 'msvcrt.dll'
+FFITutorial class >> ticksSinceStartWindows [
+	"call c clock procedure"
 
+	| aFFITutorial |
+	aFFITutorial := self new.
 
-
-
+	^ aFFITutorial ffiCall: #( uint clock #(  ) ) library: 'msvcrt.dll'
 ]
 
 { #category : 'as yet unclassified' }
-FFITutorial >> time [
+FFITutorial class >> time [
 "call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
 	"^ self ffiCall: #( uint time ( NULL ) ) library: MyLibC"
  "	^ self ffiCall: #( ulong time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libc.so'"
@@ -146,14 +218,15 @@ FFITutorial >> time [
 ]
 
 { #category : 'as yet unclassified' }
-FFITutorial >> time2 [
-"call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
+FFITutorial class >> time2 [
+	"call c procedure - through indirection MyLibC which is defined under Unified-FFI-Libraries package ... huh"
+
 	"^ self ffiCall: #( uint time ( NULL ) ) library: MyLibC"
-	 "strangely if cairo library installed it also has time defined there also "
-	^ self ffiCall: #( uint time ( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libcairo.so'.
-	
-	
 
+	"strangely if cairo library installed it also has time defined there also "
 
-	
+	| aFFITutorial |
+	aFFITutorial := self new.
+
+	^ aFFITutorial ffiCall: #( uint time #( NULL ) ) library: '/usr/lib/x86_64-linux-gnu/libcairo.so'
 ]
